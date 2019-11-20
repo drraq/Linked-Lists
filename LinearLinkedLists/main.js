@@ -1,18 +1,9 @@
 const LinkedList = require('./LinkedList.js');
+let data = [1,2,3,4,5,6];
+var ll = new LinkedList(data);
+// let d = ll.getData();
 
-var ll = new LinkedList();
-ll.push('Rehan');
-ll.push('Abdul');
-ll.push('Qadir');
-ll.push('Mateen');
-ll.push(200);
-ll.push({
-  fName: "Rehan",
-  lName: "Qadir",
-  age: 29
-});
+// console.log(d);
+var n = ll.search(4);
 
-var data = ll.getData();
-console.log(data);
-
-// console.log(ll.size);
+console.log(n);
