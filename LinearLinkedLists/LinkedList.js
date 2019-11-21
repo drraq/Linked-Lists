@@ -10,7 +10,7 @@ class LinkedList {
           this.push(data[i]);
         }
       } else {
-        console.log("Array data type expected.\nEmpty linked list is created.");
+        return undefined;
       }
     } else {
       this.head = null;
@@ -37,8 +37,15 @@ class LinkedList {
 
   // Pop last node in LL
   pop() {
+    // Edge case when there is no node in the list
     if (!this.head) {
       return;
+    } else if (this.size === 1) {
+      // Edge case when there is only one node at the head
+      var current = this.head;
+      this.head = null;
+      this.size--;
+      return current;
     } else {
       var current = this.head;
       var previous = null;
@@ -47,6 +54,7 @@ class LinkedList {
         current = current.next;
       }
       previous.next = null;
+      this.size--;
       return current;
     }
   }
@@ -76,6 +84,75 @@ class LinkedList {
     return null;
   }
 
+  // Insert node at index starting from 0
+  insertAt(index, data) {
+    if (index > this.size - 1 || index < 0) {
+      return null;
+    }
+    var current = this.head;
+    var node = new Node(data);
+
+    // Edge case for a new head
+    if (index === 0) {
+      this.head = node;
+      this.head.next = current;
+      this.size++;
+    }
+
+    var count = 1;
+    while(current) {
+      if (count === index) {
+        node.next = current.next;
+        current.next = node;
+        this.size++;
+      }
+      ++count;
+      current = current.next;
+    }
+  }
+
+  // Remove node at index
+  removeAt(index) {
+    if (index > this.size - 1 || index < 0) {
+      return null;
+    }
+    var current = this.head;
+    if (index === 0) {
+      this.head = current.next;
+      current.next = null;
+      this.size--;
+    }
+
+    var count = 1;
+    while(current) {
+      if (count === index) {
+        var node = current.next;
+        current.next = node.next;
+        node.next = null;
+        this.size--;
+      }
+      ++count;
+      current = current.next;
+    }
+  }
+
+  //reverse the linked list
+  reverse() {
+    var current = this.head;
+
+    var reverseIt = node => {
+      if (!node.next) {
+        this.head = node;
+        return;
+      }
+      reverseIt(node.next);
+      var temp = node.next;
+      temp.next = node;
+      node.next = null;
+    }
+    reverseIt(current);
+  }
+
   // Returns size of LL
   getSize() {
     return this.size;
@@ -89,6 +166,22 @@ class LinkedList {
       data.push(current.data);
       current = current.next;
     }
+    return data;
+  }
+
+  // Returns data in reverse order.
+  // Implementation using recursion
+
+  getDataInReverse() {
+    var data = [];
+    var current = this.head;
+
+    var recursivePrint = node => {
+      if (!node) return;
+      recursivePrint(node.next);
+      data.push(node.data);
+    }
+    recursivePrint(current);
     return data;
   }
 }
