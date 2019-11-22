@@ -153,6 +153,23 @@ class LinkedList {
     reverseIt(current);
   }
 
+  forEach(callback) {
+    var current = this.head;
+    var index = -1;
+    while(current) {
+      index++;
+      var next = current.next;
+      callback(index, current, next);
+      current = current.next;
+    }
+  }
+
+  function* ForEach() {
+    for (var current = this.head; current; current += current.next) {
+      yield current;
+    }
+  }
+
   // Returns size of LL
   getSize() {
     return this.size;
