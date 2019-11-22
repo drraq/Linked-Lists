@@ -152,6 +152,20 @@ class LinkedList {
     }
     reverseIt(current);
   }
+  concat(list) {
+    // Edge case when the list is empty
+    if (!this.head) {
+      return undefined;
+    } else {
+      var current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = list.getHead();
+      this.size += list.getSize();
+      return this;
+    }
+  }
 
   forEach(callback) {
     var current = this.head;
@@ -161,12 +175,6 @@ class LinkedList {
       var next = current.next;
       callback(index, current, next);
       current = current.next;
-    }
-  }
-
-  function* ForEach() {
-    for (var current = this.head; current; current += current.next) {
-      yield current;
     }
   }
 
@@ -184,6 +192,11 @@ class LinkedList {
       current = current.next;
     }
     return data;
+  }
+
+  // Returns head of the list
+  getHead() {
+    return this.head;
   }
 
   // Returns data in reverse order.
