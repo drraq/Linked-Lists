@@ -1,10 +1,18 @@
 const Matrix = require('./Matrix.js');
-var m = new Matrix();
+var A = [
+  [1,2,3],
+  [4,5,6],
+  [7,8,9]
+];
+// console.log(Array.isArray(A));
+var m = new Matrix(A);
+// m.insertRow([1,2,3,0]);
+// m.insertRow([4,5,6,0]);
+// m.insertRow([7,8,9,0]);
+// m.insertRow([7,8,9,0]);
 
-m.insertRow([1,2,3,4,5]);
-m.insertRow([6,7,8,9,10]);
-m.insertRow([11,12,13,14,15]);
-// console.log(m);
+let d = m.getDiag();
+console.log(d);
 // console.log("Top Left", m.topLeft);
 // console.log("Top Right", m.topRight);
 // console.log("Bottom Left", m.bottomRight);
