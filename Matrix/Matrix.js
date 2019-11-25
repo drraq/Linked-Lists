@@ -130,7 +130,7 @@ class Matrix {
    * Adding two Matrices of the same order
    */
 
-  // Multipy a given matrix by a scalar
+  // Multiply a given matrix by a scalar
   multiplyByScalar(scalar) {
     if (!scalar && scalar !== 0) return undefined;
     let node = this.topLeft;
@@ -146,48 +146,90 @@ class Matrix {
     return this;
   }
 
-  // Add two matrices and store the result in the calling object
+  // Add two matrices and store the result in a new matrix
   add(m) {
     let order = m.getSize();
     if (order.r !== this.rows || order.c !== this.cols) return undefined;
 
     let node = this.topLeft;
     let mNode = m.getTopLeft();
+    let data = [];
 
     while(node) {
+      let result = 0;
+      let record = [];
       let current = node;
       let mCurrent = mNode;
       while(current) {
-        current.data += mCurrent.data;
+        result = current.data + mCurrent.data;
+        record.push(result);
         current = current.next;
         mCurrent = mCurrent.next;
       }
       node = node.down;
       mNode = mNode.down;
+      data.push(record);
     }
-    return this;
+    return new Matrix(data);
   }
 
-  // Subtract two matrices and store the result in the calling object
+  // Subtract two matrices and return a new matrix
   subtract(m) {
     let order = m.getSize();
     if (order.r !== this.rows || order.c !== this.cols) return undefined;
 
     let node = this.topLeft;
     let mNode = m.getTopLeft();
+    let data = [];
 
     while(node) {
+      let result = 0;
+      let record = [];
       let current = node;
       let mCurrent = mNode;
       while(current) {
-        current.data -= mCurrent.data;
+        result = current.data - mCurrent.data;
+        record.push(result);
         current = current.next;
         mCurrent = mCurrent.next;
       }
       node = node.down;
       mNode = mNode.down;
+      data.push(record);
     }
-    return this;
+    return new Matrix(data);
+  }
+
+  // Multiply two Matrices
+  multiply(m) {
+    let order = m.getSize();
+    if (this.cols !== order.r) return undefined;
+
+    let node = this.topLeft;
+    let mNode = m.getTopLeft();
+    let data = [];
+
+    while (node) {
+      let current = node;
+      let record = [];
+      while (mNode) {
+        let mCurrent = mNode;
+        let result = 0;
+        while(mCurrent) {
+          result += (current.data * mCurrent.data);
+          current = current.next;
+          mCurrent = mCurrent.down;
+        }
+        record.push(result);
+        mNode = mNode.next;
+        current = node;
+      }
+      data.push(record);
+      node = node.down;
+      mNode = m.getTopLeft();
+    }
+
+    return new Matrix(data);
   }
 
   // Search an entry in the matrix, returns an object
