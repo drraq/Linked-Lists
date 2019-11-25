@@ -14,8 +14,12 @@ class Matrix {
     this.rows = this.cols = 0;
     if (data) {
       if (Array.isArray(data)) {
-        for (let i = 0; i < data.length; i++) {
-          this.insertRow(data[i]);
+        if (data[0].constructor === Array) {
+          for (let i = 0; i < data.length; i++) {
+            this.insertRow(data[i]);
+          }
+        } else {
+          this.insertRow(data);
         }
       } else {
         return null;
@@ -33,7 +37,7 @@ class Matrix {
         for (let j = 0; j < data.length; j++) {
           let node = new Node(data[j]);
 
-          var prev = this.topRight;
+          let prev = this.topRight;
           this.topRight = this.bottomRight = node;
 
           if (prev) {
@@ -49,13 +53,13 @@ class Matrix {
       } else {
         if (data.length !== this.cols) return null;
 
-        var above = this.bottomRight = this.bottomLeft;
+        let above = this.bottomRight = this.bottomLeft;
 
         for (let j = 0; j < this.cols; j++) {
           let node = new Node(data[j]);
 
           if (above.prev) {
-            var current = this.bottomRight;
+            let current = this.bottomRight;
             this.bottomRight = node;
             node.up = above;
             node.prev = current;
@@ -106,7 +110,7 @@ class Matrix {
   }
 
   // Get diagonal elements of a square matrix
-
+  // Top Left to Bottom Right
   getDiag() {
     if (this.rows !== this.cols) return undefined;
     let data = [];
@@ -119,6 +123,115 @@ class Matrix {
     }
     data.push(node.data);
     return data;
+  }
+
+  /* The following functions perform Matrix Airthmetic
+   * Multiplication by a scalar
+   * Adding two Matrices of the same order
+   */
+
+  // Multipy a given matrix by a scalar
+  multiplyByScalar(scalar) {
+    if (!scalar && scalar !== 0) return undefined;
+    let node = this.topLeft;
+
+    while (node) {
+      let current = node;
+      while (current) {
+        current.data *= scalar;
+        current = current.next;
+      }
+    node = node.down;
+    }
+    return this;
+  }
+
+  // Add two matrices and store the result in the calling object
+  add(m) {
+    let order = m.getSize();
+    if (order.r !== this.rows || order.c !== this.cols) return undefined;
+
+    let node = this.topLeft;
+    let mNode = m.getTopLeft();
+
+    while(node) {
+      let current = node;
+      let mCurrent = mNode;
+      while(current) {
+        current.data += mCurrent.data;
+        current = current.next;
+        mCurrent = mCurrent.next;
+      }
+      node = node.down;
+      mNode = mNode.down;
+    }
+    return this;
+  }
+
+  // Subtract two matrices and store the result in the calling object
+  subtract(m) {
+    let order = m.getSize();
+    if (order.r !== this.rows || order.c !== this.cols) return undefined;
+
+    let node = this.topLeft;
+    let mNode = m.getTopLeft();
+
+    while(node) {
+      let current = node;
+      let mCurrent = mNode;
+      while(current) {
+        current.data -= mCurrent.data;
+        current = current.next;
+        mCurrent = mCurrent.next;
+      }
+      node = node.down;
+      mNode = mNode.down;
+    }
+    return this;
+  }
+
+  // Search an entry in the matrix, returns an object
+  search(value) {
+    if (!value && value !== 0) return undefined;
+    let result = {
+      value: value,
+      r: [],
+      c: [],
+      frequency: 0
+    };
+    let node = this.topLeft;
+    let i = 1, j = 1;
+    while(node) {
+      let current = node;
+      while(current) {
+        if (current.data === value) {
+          result.r.push(i);
+          result.c.push(j);
+          result.frequency++;
+        }
+        current = current.next;
+        j++;
+      }
+      node = node.down;
+      i++;
+      j = 1;
+    }
+    return result;
+  }
+
+  // Get size of the matrix
+  getSize() {
+    return {r: this.rows, c: this.cols};
+  }
+
+  // Get the top Left Node of the matrix
+  getTopLeft() {
+    return this.topLeft;
+  }
+
+  // Check for Square matrix
+  isSquare() {
+    return this.rows === this.cols ? true : false;
   }
 }
 
