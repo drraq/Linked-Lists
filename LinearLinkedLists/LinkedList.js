@@ -1,4 +1,9 @@
-const Node = require("./Node.js");
+class Node {
+  constructor(data, next = null) {
+    this.data = data;
+    this.next = next;
+  }
+}
 
 class LinkedList {
   constructor(data = null) {
@@ -15,6 +20,25 @@ class LinkedList {
     } else {
       this.head = null;
       this.size = 0;
+    }
+
+    // Implementation of Iterator Protocol
+    // Place it in constructor
+    // return object can have multiple key value pair separated by comma
+
+    this[Symbol.iterator] = function() {
+      var current = this.head;
+      return {
+        next: function() {
+          if(current) {
+            var val = current.data;
+            current = current.next;
+            return {value: val, done: false};
+          } else {
+            return {value: null, done: true};
+          }
+        }
+      };
     }
   }
 
