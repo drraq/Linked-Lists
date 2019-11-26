@@ -261,6 +261,47 @@ class Matrix {
     return result;
   }
 
+  // Perform Row Operations
+  swapRows(i,j) {
+
+    if (i === j) {
+      return this;
+    }
+    // Edge case for matrix dimension
+    if ( 0 < i && 0 < j && i <= this.rows && j <= this.rows) {
+      let row1Node = this.topLeft;
+      let row2Node = this.topLeft;
+
+      while((i - 1) > 0) {
+        row1Node = row1Node.down;
+        i--;
+      }
+      while((j - 1) > 0) {
+        row2Node = row2Node.down;
+        j--;
+      }
+
+      while (row1Node) {
+        let val = row1Node.data;
+        row1Node.data = row2Node.data;
+        row2Node.data = val;
+
+        row1Node = row1Node.next;
+        row2Node = row2Node.next;
+      }
+      return this;
+
+    } else {
+      return undefined;
+    }
+  }
+
+  // Transform given matrix into Echelon form
+  // Doesn't need to be square matrix
+  echelon() {
+
+  }
+  
   // Get size of the matrix
   getSize() {
     return {r: this.rows, c: this.cols};
